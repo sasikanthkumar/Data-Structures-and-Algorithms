@@ -29,6 +29,15 @@ int main(){
     After every iteration the largest element in the list will be placed to its position in the sorted order
  
  The below implementation is optimized implementation of bubble sort i.e the algorithm stops if the inner loop didn't cause any swap.
+ 
+ Time Complexity: O(n*n)
+ 
+ Minimum Time: O(n)     When elements are already sorted
+ 
+ In Place Algorithm : Yes   Because it takes only O(1) Extra storage space
+ 
+ Stable: Yes    Preserves original order of the input set
+ 
 */
 
 void bubble_sort(int *arr, int length){
@@ -43,5 +52,5 @@ void bubble_sort(int *arr, int length){
                 done = 0;
             }
         }
-    }while (done == 0);
+    }while (done == 0);  // if no two elements are swapped done = 1 then the loop stops
 }
