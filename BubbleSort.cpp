@@ -27,6 +27,8 @@ int main(){
 
 /* Here we sort the array in increasing order so when the first element is greater than the adjacent element we swap them
     After every iteration the largest element in the list will be placed to its position in the sorted order
+ 
+ The below implementation is optimized implementation of bubble sort i.e the algorithm stops if the inner loop didn't cause any swap.
 */
 
 void bubble_sort(int *arr, int length){
