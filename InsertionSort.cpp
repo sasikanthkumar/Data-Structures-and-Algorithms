@@ -25,6 +25,18 @@ int main() {
 /*
 In Insertion sort first we select the element into temp Then in the while loop
  we check if the temp is less than the left adjacent element if temp is less we shift the left element to right side after ending while loop we insert temp into a position which is temp's position in the sorted list Like this in every iteration we shift the element to its correct position in the sorted list.
+ 
+ Time Complexity: O(n*n)
+ 
+ Minimum Time: O(n)  when the list is already sorted
+ 
+ In Place: Yes Auxiliary space O(1)
+ 
+ Stable: Yes Preserves original order of input set
+ 
+ It is used mostly when number of elements is small and when the array
+ is almost sorted as only few elemnts are need to be moved
+ 
 */
 
 void insertion_sort(int *arr,int length){
