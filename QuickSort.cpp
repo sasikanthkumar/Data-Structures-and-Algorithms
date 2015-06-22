@@ -3,6 +3,8 @@ using namespace std;
 
 void quick_sort(int *arr, int start, int end);
 int partition(int *arr, int start, int end);
+int rand_partition(int *arr, int start, int end);
+
 
 int main(){
     int arr[] = {10,7,16,5,1,9,3};
@@ -46,7 +48,12 @@ QuickSort - Quick sort is a divide and conquer algorithm compared to merge sort 
 
 void quick_sort(int *arr,int start, int end){
     if (start < end) {
-        int pivot_pos = partition(arr, start, end);
+        // usinfg normal first element as pivot
+        //int pivot_pos = partition(arr, start, end);
+        
+        // using random eleemnt as pivot
+        int pivot_pos = rand_partition(arr, start, end);
+        
         quick_sort(arr, start, pivot_pos-1);
         quick_sort(arr, pivot_pos+1, end);
     }
@@ -75,3 +82,17 @@ int partition(int *arr, int start, int end){
     
     return i-1;  // return position of pivot
 }
+// partition function randomized
+int rand_partition(int *arr, int start, int end){
+    // choosing of position of pivot using rand() function
+    int pivot = start + rand()%(end-start+1);
+    
+    // swapping pivot eleemnt and first element
+    int temp = arr[pivot];
+    arr[pivot] = arr[start];
+    arr[start] = temp;
+    return partition(arr, start, end);
+}
+
+
+
