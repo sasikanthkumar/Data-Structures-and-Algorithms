@@ -12,9 +12,10 @@ int main(){
     
     scanf("%d",&n);
     scanf("%d",&m);
-    
+    int store_i = 0;
     int exceptional_case = 0;
     vector<string> attr_names(m);
+    int null_flag = 1;
     
     map<string,int> *attr_values = new map<string,int>[m];
     //attr_values[0].insert(pair<string,int>("sss",1));
@@ -29,6 +30,7 @@ int main(){
         getline(cin,temp_line);
         line_length = temp_line.length();
         start = 0;
+        //cout << endl;
         //cout << temp_line << endl;
         //cout << temp_line.substr(6,12) <<endl;
         int key = 1;
@@ -52,6 +54,7 @@ int main(){
             }
         }
     }
+    
     
     
     /**
@@ -78,10 +81,12 @@ int main(){
     curr_data.clear();
     
     
-    string curr_trng_exmp;
+    
     for(int i = 0; i<n; i++) {
+        string curr_trng_exmp;
         curr_data.clear();
         getline(cin,curr_trng_exmp);
+        //cout << "i = "<< i  << endl;
         line_length = curr_trng_exmp.length();
         start = 0;
         int attr_index = 0;
@@ -100,6 +105,7 @@ int main(){
                 }
             }
         }
+       
         //printing curreent data
         /**
         for (int k = 0; k<curr_data.size(); k++) {
@@ -109,8 +115,13 @@ int main(){
         **/
         vector<int> first_step;
         first_step.clear();
-        if(curr_data.back() == attr_values[m-1]["Yes"]){    //positive example
+        //cout << "curr data = " << curr_data.back() << endl;
+        
+        if(curr_data.back() == 1 && null_flag == 1){    //positive example
+            //cout << "positive" <<endl;
             // removing from generic border any hypothesis inconsistent with the given training example
+            set <vector<int> > temporary_g_border;
+            temporary_g_border = generic_boundary;
             for (set<vector<int> >::iterator it = generic_boundary.begin(); it != generic_boundary.end() ; it++) {
                 first_step = *it;
                 int flag = 0;
@@ -121,12 +132,15 @@ int main(){
                     }
                 }
                 if (flag == 1) {
-                    generic_boundary.erase(first_step);
+                    temporary_g_border.erase(first_step);
                 }
                 first_step.clear();
             }
+            generic_boundary = temporary_g_border;
             if(generic_boundary.size() == 0){
                 exceptional_case = 1;
+                null_flag = 0;
+                store_i = i;
                 break;
             }
             
@@ -154,7 +168,17 @@ int main(){
                             first_step[i] = -2;
                         }
                     }
-                    consistent_in_s.insert(first_step);
+                    int flag_gchek = 1;
+                    vector<int> g_check = *(generic_boundary.begin());
+                    for (int p = 0; p<(m-1); p++) {
+                        if ((first_step[p] != g_check[p])&&(first_step[p] != 0) &&(g_check[p] != -2)) {
+                            flag_gchek = 0;
+                            break;
+                        }
+                    }
+                    if (flag_gchek == 1) {
+                        consistent_in_s.insert(first_step);
+                    }
                 }
             }
             
@@ -195,13 +219,20 @@ int main(){
             }
             if (specific_boundary.size() == 0) {
                 exceptional_case = 1;
+                null_flag = 0;
+                store_i  =i;
                 break;
+                
             }
             
-        }else{          // negative example
+        }else if(null_flag == 1){          // negative example
             //cout << "Negative example" <<endl;
+            //cout << specific_boundary.size() <<endl;
+            set <vector<int> > temporary_s_border;
+            temporary_s_border = specific_boundary;
             //removing from specfic border any hypothesis inconsistent with given training example
             for (set<vector<int> >::iterator it = specific_boundary.begin(); it != specific_boundary.end() ; it++) {
+                //cout << "in for loop " <<endl;
                 first_step = *it;
                 int flag = 0;
                 for (int j = 0; j<(m-1); j++) {
@@ -211,15 +242,20 @@ int main(){
                     }
                 }
                 if (flag == 0) {
-                    specific_boundary.erase(first_step);
+                    temporary_s_border.erase(first_step);
                 }
                 first_step.clear();
+                //cout << "ou for lop" <<endl;
             }
+            specific_boundary = temporary_s_border;
             if (specific_boundary.size() == 0) {
                 exceptional_case = 1;
+                null_flag = 0;
+                store_i = i;
                 break;
+                
             }
-            
+            //cout << "hbsdfh" <<endl;
             //removing inconsistent hypothesis in g
             //if removed adding next consistent hypo in g
             set <vector<int> > consistent_in_g;
@@ -297,6 +333,13 @@ int main(){
                     generic_boundary.insert(first_step);
                 }
             }
+            if (generic_boundary.size() == 0) {
+                exceptional_case = 1;
+                null_flag = 0;
+                store_i = i;
+                break;
+                
+            }
             
             
             
@@ -304,12 +347,19 @@ int main(){
         
         if (specific_boundary == generic_boundary) {
             exceptional_case = 1;
+            null_flag = 0;
+            store_i = i;
             break;
         }
         
         
     }
     if (exceptional_case == 1) {
+        string extra;
+        for (int h = store_i; h<n-1; h++) {
+            getline(cin,extra);
+        }
+        
         if (specific_boundary.size() == 0 || generic_boundary.size() == 0) {
             cout << "Specific and generic boundaries converged to NULL" << endl;
         }else if(specific_boundary == generic_boundary){
